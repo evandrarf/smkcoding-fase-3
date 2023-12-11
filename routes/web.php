@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,6 +23,10 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::controller(LoginController::class)->prefix('login')->name('login.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])->name('index');
         Route::post('/', [LoginController::class, 'login'])->name('submit');
+    });
+    Route::controller(RegisterController::class)->prefix('register')->name('register.')->group(function () {
+        Route::get('/', [RegisterController::class, 'index'])->name('index');
+        Route::post('/', [RegisterController::class, 'register'])->name('submit');
     });
 });
 

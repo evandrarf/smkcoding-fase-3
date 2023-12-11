@@ -6,9 +6,9 @@ const props = defineProps({
 </script>
 <template>
     <div
-        class="w-screen overflow-x-hidden h-screen bg-slate-50 flex justify-center"
+        class="w-screen overflow-x-hidden h-screen bg-slate-50 flex justify-center overflow-y-hidden"
     >
-        <div class="w-1/2 py-16 px-20 gap-16 flex flex-col">
+        <div class="w-1/2 py-16 px-20 gap-16 flex flex-col overflow-y-auto">
             <h2 class="font-bold text-xl">{{ app_name }}</h2>
             <slot />
         </div>

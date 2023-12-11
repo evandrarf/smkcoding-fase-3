@@ -4,26 +4,29 @@ export default {
 };
 </script>
 <script setup>
+import AuthLayout from "@/layouts/AuthLayout.vue";
+import { Head, Link } from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 import axios from "axios";
-import { Head, Link } from "@inertiajs/inertia-vue3";
+import { Inertia } from "@inertiajs/inertia";
 
-import AuthLayout from "@/layouts/AuthLayout.vue";
 import AuthForm from "@/components/AuthForm.vue";
 import VInput from "@/components/Input.vue";
 
 const form = ref({
+    name: "",
     email: "",
     password: "",
+    password_confirmation: "",
 });
 const isLoading = ref(false);
 
-const login = () => {
+const register = () => {
     isLoading.value = true;
     axios
-        .post(route("auth.login.submit"), form.value)
+        .post(route("auth.register.submit"), form.value)
         .then((res) => {
-            window.location.reload();
+            Inertia.visit(route("auth.login.index"));
         })
         .catch((err) => {
             console.log(err);
@@ -33,12 +36,18 @@ const login = () => {
         });
 };
 </script>
-
 <template>
-    <Head title="Login | STEMBA MADING" />
+    <Head title="Register | STEMBA MADING" />
     <div class="flex flex-col items-center gap-8 w-full">
-        <h1 class="text-4xl font-medium">Login</h1>
+        <h1 class="text-4xl font-medium">Register</h1>
         <AuthForm>
+            <VInput
+                name="Name"
+                placeholder="Input your name..."
+                type="text"
+                :model-value="form.name"
+                @update:model-value="(newValue) => (form.name = newValue)"
+            />
             <VInput
                 name="Email"
                 placeholder="Input your email..."
@@ -53,20 +62,29 @@ const login = () => {
                 :model-value="form.password"
                 @update:model-value="(newValue) => (form.password = newValue)"
             />
+            <VInput
+                name="Password Confirmation"
+                placeholder="Input your password confirmation..."
+                type="password"
+                :model-value="form.password_confirmation"
+                @update:model-value="
+                    (newValue) => (form.password_confirmation = newValue)
+                "
+            />
             <button
                 class="py-2 px-4 mt-6 w-full text-white rounded"
                 :class="
                     isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500'
                 "
-                @click="login"
+                @click="register"
             >
-                {{ isLoading ? "Loading..." : "Login" }}
+                {{ isLoading ? "Loading..." : "Register" }}
             </button>
         </AuthForm>
         <p>
-            Don't have an account?
-            <Link class="text-blue-500" :href="route('auth.register.index')"
-                >Register here</Link
+            Already have an account?
+            <Link class="text-blue-500" :href="route('auth.login.index')"
+                >Login</Link
             >
         </p>
     </div>
