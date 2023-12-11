@@ -26,4 +26,12 @@ trait HasRole
         $this->role()->associate($role);
         $this->save();
     }
+
+    /**
+     * Determine if the user has the given role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role->name === $role;
+    }
 }
