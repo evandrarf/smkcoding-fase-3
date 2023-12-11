@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-// })->name('home');
 
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::controller(LoginController::class)->prefix('login')->name('login.')->group(function () {
@@ -37,6 +35,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('app.')->group(function () {
         require __DIR__ . '/app/home.php';
+        require __DIR__ . '/app/mading.php';
     });
 
     Route::get('/admin', function () {

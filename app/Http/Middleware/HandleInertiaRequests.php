@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\Utility\GetNavbarMenu;
+use App\Helpers\Menu\MenuItem;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -36,8 +38,16 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $menus = (new GetNavbarMenu())->handle();
+
+        $activeMenu = (new MenuItem($menus))->handle();
+
         return array_merge(parent::share($request), [
             "app_name" => config("app.name"),
+            "user" => fn () => $request->user()
+                ? $request->user()->only("id", "name", "email")
+                : null,
+            "menus" => $activeMenu,
         ]);
     }
 }

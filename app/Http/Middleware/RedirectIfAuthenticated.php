@@ -24,7 +24,7 @@ class RedirectIfAuthenticated
                 if ($request->user()->hasRole('admin')) {
                     return redirect(route('admin.index'));
                 }
-                return redirect(route('dashboard.index'));
+                return redirect(route('app.home'));
             }
         }
 

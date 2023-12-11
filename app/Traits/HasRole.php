@@ -34,4 +34,9 @@ trait HasRole
     {
         return $this->role->name === $role;
     }
+
+    public function can($permission, $arguments = [])
+    {
+        return $this->role->permissions->contains('name', $permission);
+    }
 }
