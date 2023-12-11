@@ -20,6 +20,7 @@
         "@vitejs/plugin-vue": "^4.5.2",
         "notiwind": "^2.0.2",
         "vue": "^3.3.11",
+        "vue-types": "^5.1.1",
         "ziggy-js": "^1.8.1"
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +15,22 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('index');
-})->name('home');
+// Route::get('/', function () {
+// })->name('home');
 
-Route::get('/about', function () {
-    return Inertia::render('about');
-})->name('about');
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::controller(LoginController::class)->prefix('login')->name('login.')->group(function () {
+        Route::get('/', [LoginController::class, 'index'])->name('index');
+        Route::post('/', [LoginController::class, 'login'])->name('submit');
+    });
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return inertia('Dashboard/Index');
+    })->name('dashboard.index');
+
+    Route::get('/admin', function () {
+        return inertia('Admin/Dashboard/Index');
+    })->name('admin.dashboard.index');
+});
