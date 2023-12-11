@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Dashboard\HomeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,14 +30,16 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::get('/', [RegisterController::class, 'index'])->name('index');
         Route::post('/', [RegisterController::class, 'register'])->name('submit');
     });
+
+    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return inertia('Dashboard/Index');
-    })->name('dashboard.index');
+    Route::name('app.')->group(function () {
+        require __DIR__ . '/app/home.php';
+    });
 
     Route::get('/admin', function () {
         return inertia('Admin/Dashboard/Index');
-    })->name('admin.dashboard.index');
+    })->name('admin.index');
 });

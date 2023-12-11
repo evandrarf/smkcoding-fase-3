@@ -1,10 +1,12 @@
 <script setup>
 import { string } from "vue-types";
+import Notification from "@/components/Notification.vue";
 const props = defineProps({
     app_name: string().def("PAPAP PENGUMUMAN DIGITAL SEKOLAH"),
 });
 </script>
 <template>
+    <Notification></Notification>
     <div
         class="w-screen overflow-x-hidden h-screen bg-slate-50 flex justify-center overflow-y-hidden"
     >

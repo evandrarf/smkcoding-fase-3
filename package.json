@@ -14,6 +14,12 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.5.1",
+        "@fortawesome/free-brands-svg-icons": "^6.5.1",
+        "@fortawesome/free-regular-svg-icons": "^6.5.1",
+        "@fortawesome/free-solid-svg-icons": "^6.5.1",
+        "@fortawesome/vue-fontawesome": "^3.0.5",
+        "@heroicons/vue": "^2.0.18",
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
