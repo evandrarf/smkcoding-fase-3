@@ -18,9 +18,9 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('slug')->unique();
-            $table->enum('status', ['published', 'draft', 'rejected'])->default('draft');
+            $table->enum('status', ['published', 'need_review', 'draft', 'rejected'])->default('need_review');
             $table->enum('priority', ['normal', 'important'])->default('normal');
-            $table->dateTime('publish_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('published_at')->nullable()->default(now());
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });

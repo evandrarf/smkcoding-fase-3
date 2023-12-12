@@ -46,10 +46,10 @@ class MadingService
     {
         $data = Mading::where('slug', $slug)->first();
 
-        if (!$data) {
-            throw new Exception("Data not found", 404);
+        if ($data || $data != null || $data->published_at <= now() || $data->published_at == null || $data->user_id == auth()->user()->id || auth()->user()->role == 'admin') {
+            return $data;
         }
 
-        return $data;
+        throw new Exception("Data not found", 404);
     }
 }

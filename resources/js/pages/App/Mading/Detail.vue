@@ -11,6 +11,7 @@ import { notify } from "notiwind";
 
 import AppLayout from "@/layouts/AppLayout.vue";
 import Spinner from "@/components/icons/Spinner.vue";
+import Badge from "@/components/Badge.vue";
 
 const props = defineProps({
     slug: string(),
@@ -18,6 +19,19 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const data = ref({});
+const error = ref(null);
+
+const badgeColor = {
+    normal: "blue",
+    important: "red",
+};
+
+const statusColor = {
+    published: "green",
+    draft: "yellow",
+    rejected: "red",
+    "need review": "yellow",
+};
 
 const getData = () => {
     axios
@@ -26,18 +40,16 @@ const getData = () => {
             data.value = res.data;
         })
         .catch((err) => {
-            if (err.response.status === 404) {
-                data.value = "NOT_FOUND";
-            } else {
-                notify(
-                    {
-                        group: "top",
-                        text: err.response.data.message,
-                        type: "error",
-                    },
-                    2500
-                );
-            }
+            notify(
+                {
+                    group: "top",
+                    text: err.response.data.message,
+                    type: "error",
+                },
+                2500
+            );
+
+            error.value = err.response.data.message;
         })
         .finally(() => (isLoading.value = false));
 };
@@ -49,7 +61,7 @@ onMounted(() => {
 </script>
 <template>
     <div
-        v-if="!isLoading && data !== 'NOT_FOUND'"
+        v-if="!isLoading && error === null"
         class="w-full flex flex-col gap-20"
     >
         <div class="mt-8">
@@ -65,11 +77,28 @@ onMounted(() => {
         <div class="w-full flex justify-between items-center">
             <div>
                 <p class="text-sm">Author : {{ data.author }}</p>
+                <div class="mt-3 flex gap-3 items-center">
+                    <p>Priority:</p>
+                    <Badge
+                        size="md"
+                        :color="badgeColor[data.priority?.toLowerCase()]"
+                        :text="data.priority"
+                    />
+                </div>
+                <div class="mt-3 flex gap-3 items-center">
+                    <p>Status:</p>
+                    <Badge
+                        size="md"
+                        :color="statusColor[data.status?.toLowerCase()]"
+                        :text="data.status"
+                    />
+                </div>
             </div>
             <div>
                 <p class="text-sm">{{ data.published_at }}</p>
             </div>
         </div>
+        <div class="h-0.5 w-full bg-gray-300"></div>
         <div
             class="prose max-w-full mb-24 leading-6 prose-slate"
             v-html="data.content"
@@ -80,7 +109,7 @@ onMounted(() => {
         v-else-if="!isLoading"
         class="w-full h-4/5 flex justify-center items-center"
     >
-        <h1 class="font-semibold text-2xl">Mading Not Found</h1>
+        <h1 class="font-semibold text-2xl">{{ error }}</h1>
     </div>
     <!-- Loading State -->
     <div v-else class="w-full h-screen flex justify-center items-center">

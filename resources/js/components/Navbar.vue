@@ -6,6 +6,7 @@ import Home from "@/components/icons/Home.vue";
 import Plus from "@/components/icons/Plus.vue";
 import Bookmark from "@/components/icons/Bookmark.vue";
 import User from "@/components/icons/User.vue";
+import NewsPaper from "@/components/icons/NewsPaper.vue";
 
 const props = defineProps({
     appName: string().def("PAPAP PENGUMUMAN DIGITAL SEKOLAH"),
@@ -21,6 +22,7 @@ const icons = {
     Plus,
     Bookmark,
     User,
+    NewsPaper,
 };
 </script>
 <template>

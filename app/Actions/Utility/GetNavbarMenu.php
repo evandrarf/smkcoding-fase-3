@@ -14,8 +14,14 @@ class GetNavbarMenu
                 "can" => ["view_mading"]
             ],
             [
-                "name" => "Create",
+                "name" => "Mading",
                 "url" => route("app.madings.index"),
+                "icon" => "NewsPaper",
+                "can" => ["view_mading"]
+            ],
+            [
+                "name" => "Create",
+                "url" => route("app.madings.create"),
                 "icon" => "Plus",
                 "can" => ["create_mading"]
             ],
@@ -23,7 +29,7 @@ class GetNavbarMenu
                 "name" => "Bookmarks",
                 "url" => "https://localhost:8000/bookmarks",
                 "icon" => "Bookmark",
-                "can" => ["create_mading"]
+                "can" => ["view_mading"]
             ],
             [
                 "name" => "Profile",
