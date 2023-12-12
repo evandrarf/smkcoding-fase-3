@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Actions\FileSystemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -37,6 +38,8 @@ Route::middleware('auth')->group(function () {
         require __DIR__ . '/app/home.php';
         require __DIR__ . '/app/mading.php';
     });
+
+    Route::post('/file/upload', [FileSystemController::class, 'upload'])->name('file.upload');
 
     Route::get('/admin', function () {
         return inertia('Admin/Dashboard/Index');

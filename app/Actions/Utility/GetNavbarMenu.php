@@ -15,7 +15,7 @@ class GetNavbarMenu
             ],
             [
                 "name" => "Create",
-                "url" => route("app.mading.index"),
+                "url" => route("app.madings.index"),
                 "icon" => "Plus",
                 "can" => ["create_mading"]
             ],

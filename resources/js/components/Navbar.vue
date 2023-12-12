@@ -29,7 +29,11 @@ const icons = {
     >
         <div class="max-w-[80%] w-full flex justify-between items-center">
             <div class="flex items-center">
-                <h2 class="font-semibold text-xl">{{ appName }}</h2>
+                <Link
+                    :href="route('app.home')"
+                    class="font-semibold text-xl cursor-pointer"
+                    >{{ appName }}</Link
+                >
                 <div class="ml-6">
                     <input
                         type="search"
