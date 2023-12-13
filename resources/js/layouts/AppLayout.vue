@@ -13,7 +13,7 @@ const props = defineProps({
 <template>
     <Notification></Notification>
     <div class="max-w-screen overflow-y-auto h-screen">
-        <Navbar :app-name="app_name" :menus="menus" />
+        <Navbar :app-name="app_name" :menus="menus" :user="user" />
         <div class="w-full h-full flex justify-center mt-8 z-0">
             <div class="max-w-[80%] w-full">
                 <slot />

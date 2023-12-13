@@ -18,7 +18,8 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('slug')->unique();
-            $table->enum('status', ['published', 'need_review', 'draft', 'rejected'])->default('need_review');
+            $table->boolean('need_review')->default(true);
+            $table->boolean('rejected')->default(false);
             $table->enum('priority', ['normal', 'important'])->default('normal');
             $table->dateTime('published_at')->nullable()->default(now());
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();

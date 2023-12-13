@@ -2,6 +2,7 @@
 
 namespace App\Services\Dashboard;
 
+use App\Actions\Utility\PaginateCollection;
 use App\Models\Mading;
 use App\Services\FileService;
 use Exception;
@@ -20,6 +21,43 @@ class MadingService
         }
 
         return $slug;
+    }
+
+    public function getData($request)
+    {
+        $query = Mading::query();
+
+        $query->when($request->has('priority') && $request->priority != null, function ($q) use ($request) {
+            $q->where('priority', $request->priority);
+        });
+
+        $query->when($request->has('search') && $request->search != null, function ($q) use ($request) {
+            $q->where('title', 'like', '%' . $request->search . '%');
+        });
+
+        $query->when($request->has('status') && $request->status != null, function ($q) use ($request) {
+            if ($request->status == 'published') {
+                $q->where('published_at', '<=', now())->where('rejected', false)->where('need_review', false);
+            } else if (auth()->check() && auth()->user()->role->name == 'admin') {
+                if ($request->status == 'rejected') {
+                    $q->where('rejected', true);
+                } else if ($request->status == 'need_review') {
+                    $q->where('need_review', true);
+                } else if ($request->status == 'draft') {
+                    $q->where('published_at', '>', now())->where('rejected', false)->where('need_review', false);
+                }
+            } else {
+                throw new Exception("You don't have permission to access this data", 403);
+            }
+        });
+
+        $limit = $request->limit > 0 || $request->limit !== null ? $request->limit : 10;
+
+        $paginate = new PaginateCollection();
+
+        $data = $paginate->handle($query->orderBy('published_at', 'desc')->get(), $limit);
+
+        return $data;
     }
 
     public function store($request)
@@ -46,10 +84,18 @@ class MadingService
     {
         $data = Mading::where('slug', $slug)->first();
 
-        if ($data || $data != null || $data->published_at <= now() || $data->published_at == null || $data->user_id == auth()->user()->id || auth()->user()->role == 'admin') {
+        if (!$data) {
+            throw new Exception("Data not found", 404);
+        }
+
+        if (auth()->check() && (auth()->user()->id == $data->user_id || auth()->user()->role->name == 'admin')) {
             return $data;
         }
 
-        throw new Exception("Data not found", 404);
+        if ($data->need_review || $data->rejected || $data->published_at > now()) {
+            throw new Exception("Data not found", 404);
+        }
+
+        return $data;
     }
 }

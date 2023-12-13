@@ -1,5 +1,5 @@
 <script setup>
-import { string, array } from "vue-types";
+import { string, array, object } from "vue-types";
 import { Link } from "@inertiajs/inertia-vue3";
 
 import Home from "@/components/icons/Home.vue";
@@ -11,6 +11,7 @@ import NewsPaper from "@/components/icons/NewsPaper.vue";
 const props = defineProps({
     appName: string().def("PAPAP PENGUMUMAN DIGITAL SEKOLAH"),
     menus: array().def([]),
+    user: object().def(null),
 });
 
 const getUrlPathName = (route) => {
@@ -45,6 +46,12 @@ const icons = {
                 </div>
             </div>
             <div class="flex gap-4">
+                <Link
+                    v-if="!user"
+                    class="text-white bg-blue-500 px-4 py-2 rounded"
+                    :href="route('auth.login.index')"
+                    >Login</Link
+                >
                 <Link
                     class="ml-6 flex gap-1 items-center flex-col"
                     v-for="(menu, index) in menus"

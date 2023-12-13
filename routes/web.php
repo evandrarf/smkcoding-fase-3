@@ -33,11 +33,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 });
 
+Route::name('app.')->group(function () {
+    require __DIR__ . '/app/home.php';
+    require __DIR__ . '/app/mading.php';
+});
 Route::middleware('auth')->group(function () {
-    Route::name('app.')->group(function () {
-        require __DIR__ . '/app/home.php';
-        require __DIR__ . '/app/mading.php';
-    });
 
     Route::post('/file/upload', [FileSystemController::class, 'upload'])->name('file.upload');
 

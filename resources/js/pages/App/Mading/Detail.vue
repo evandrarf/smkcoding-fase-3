@@ -8,6 +8,7 @@ import { string } from "vue-types";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { notify } from "notiwind";
+import { Head } from "@inertiajs/inertia-vue3";
 
 import AppLayout from "@/layouts/AppLayout.vue";
 import Spinner from "@/components/icons/Spinner.vue";
@@ -60,6 +61,7 @@ onMounted(() => {
 });
 </script>
 <template>
+    <Head title="Mading Detail | STEMBA MADING" />
     <div
         v-if="!isLoading && error === null"
         class="w-full flex flex-col gap-20"
@@ -85,7 +87,7 @@ onMounted(() => {
                         :text="data.priority"
                     />
                 </div>
-                <div class="mt-3 flex gap-3 items-center">
+                <div class="mt-3 flex gap-3 items-center" v-if="data.status">
                     <p>Status:</p>
                     <Badge
                         size="md"
@@ -95,7 +97,12 @@ onMounted(() => {
                 </div>
             </div>
             <div>
+                <p class="text-md" v-if="data.is_schedule">Scheduled at:</p>
+                <p class="text-md" v-else>Published at:</p>
                 <p class="text-sm">{{ data.published_at }}</p>
+                <p class="text-sm" v-if="data.published_at_time">
+                    {{ data.published_at_time }}
+                </p>
             </div>
         </div>
         <div class="h-0.5 w-full bg-gray-300"></div>
