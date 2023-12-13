@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\ChangeMadingStatusRequest;
 use App\Http\Requests\Dashboard\CreateMadingRequest;
 use App\Http\Resources\DetailMadingResource;
 use App\Http\Resources\ListMadingResource;
@@ -30,6 +31,19 @@ class MadingController extends Controller
         return Inertia::render('App/Mading/Create');
     }
 
+    public function changeStatus(ChangeMadingStatusRequest $request, $id)
+    {
+        try {
+            $data = $this->madingService->changeStatus($request, $id);
+
+            $res = new SubmitMadingResource($data, "Success change status mading");
+
+            return $this->respond($res, 200);
+        } catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
     public function getData(Request $request)
     {
         try {
@@ -52,7 +66,7 @@ class MadingController extends Controller
 
             return $this->respond($res, 200);
         } catch (Exception $e) {
-            return $this->exceptionError($e->getMessage(), $e->getCode());
+            return $this->exceptionError($e->getMessage());
         }
     }
 
@@ -72,7 +86,7 @@ class MadingController extends Controller
 
             return $this->respond($res, 200);
         } catch (Exception $e) {
-            return $this->exceptionError($e->getMessage(), $e->getCode() !== 0 ? $e->getCode() : 500);
+            return $this->exceptionError($e->getMessage());
         }
     }
 }

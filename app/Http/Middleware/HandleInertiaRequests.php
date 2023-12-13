@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\Utility\GetAdminSidebarMenu;
 use App\Actions\Utility\GetNavbarMenu;
 use App\Helpers\Menu\MenuItem;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $menus = (new GetNavbarMenu())->handle();
-
+        $adminMenus = (new GetAdminSidebarMenu())->handle();
         $activeMenu = (new MenuItem($menus))->handle();
 
         return array_merge(parent::share($request), [
@@ -48,6 +49,7 @@ class HandleInertiaRequests extends Middleware
                 ? $request->user()->only("id", "name", "email")
                 : null,
             "menus" => $activeMenu,
+            "admin_menus" => $request->user()?->hasRole("admin") ? $adminMenus : [],
         ]);
     }
 }

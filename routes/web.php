@@ -36,12 +36,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::name('app.')->group(function () {
     require __DIR__ . '/app/home.php';
     require __DIR__ . '/app/mading.php';
+    require __DIR__ . '/app/admin.php';
 });
+
 Route::middleware('auth')->group(function () {
-
     Route::post('/file/upload', [FileSystemController::class, 'upload'])->name('file.upload');
-
-    Route::get('/admin', function () {
-        return inertia('Admin/Dashboard/Index');
-    })->name('admin.index');
 });

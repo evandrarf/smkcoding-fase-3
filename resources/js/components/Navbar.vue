@@ -7,6 +7,7 @@ import Plus from "@/components/icons/Plus.vue";
 import Bookmark from "@/components/icons/Bookmark.vue";
 import User from "@/components/icons/User.vue";
 import NewsPaper from "@/components/icons/NewsPaper.vue";
+import ChartAnalytics from "@/components/icons/ChartAnalytics.vue";
 
 const props = defineProps({
     appName: string().def("PAPAP PENGUMUMAN DIGITAL SEKOLAH"),
@@ -24,6 +25,7 @@ const icons = {
     Bookmark,
     User,
     NewsPaper,
+    ChartAnalytics,
 };
 </script>
 <template>
@@ -37,13 +39,6 @@ const icons = {
                     class="font-semibold text-xl cursor-pointer"
                     >{{ appName }}</Link
                 >
-                <div class="ml-6">
-                    <input
-                        type="search"
-                        class="outline-none border-2 border-gray-300 px-3 py-1 rounded"
-                        placeholder="Search mading"
-                    />
-                </div>
             </div>
             <div class="flex gap-4">
                 <Link
@@ -61,8 +56,8 @@ const icons = {
                     <component
                         class="h-5 w-5"
                         :class="
-                            $page.url.split('/').pop() ===
-                            getUrlPathName(menu.url).split('/').pop()
+                            $page.url.split('/').join('') ===
+                            getUrlPathName(menu.url).split('/').join('')
                                 ? 'text-blue-700'
                                 : 'text-gray-500'
                         "

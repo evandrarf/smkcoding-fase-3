@@ -11,7 +11,7 @@ class GetNavbarMenu
                 "name" => "Home",
                 "url" => route("app.home"),
                 "icon" => "Home",
-                "can" => ["view_mading"]
+                "can" => []
             ],
             [
                 "name" => "Mading",
@@ -29,13 +29,19 @@ class GetNavbarMenu
                 "name" => "Bookmarks",
                 "url" => "https://localhost:8000/bookmarks",
                 "icon" => "Bookmark",
-                "can" => ["view_mading"]
+                "can" => ["view_bookmarks"]
+            ],
+            [
+                "name" => "Admin",
+                "url" => route("app.admin.index"),
+                "icon" => "ChartAnalytics",
+                "can" => ['view_admin_page']
             ],
             [
                 "name" => "Profile",
                 "url" => "https://localhost:8000/profile",
                 "icon" => "User",
-                "can" => []
+                "can" => ['view_profile_page']
             ],
         ];
     }

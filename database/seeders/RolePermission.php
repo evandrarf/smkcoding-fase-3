@@ -18,6 +18,9 @@ class RolePermission extends Seeder
             'update_user',
             'create_mading',
             'view_mading',
+            'view_admin_page',
+            'view_bookmarks',
+            'view_profile_page',
         ];
 
         foreach ($permissions as $permission) {
@@ -40,9 +43,9 @@ class RolePermission extends Seeder
         $roleAdmin->givePermissionsTo($allPermissions);
 
         $roleManagement = Role::where('name', 'management')->first();
-        $roleManagement->givePermissionsTo(['create_mading']);
+        $roleManagement->givePermissionsTo(['create_mading', 'view_bookmarks', 'view_mading', 'view_user_page']);
 
         $roleUser = Role::where('name', 'user')->first();
-        $roleUser->givePermissionsTo(['view_mading']);
+        $roleUser->givePermissionsTo(['view_mading', 'view_user_page', 'view_bookmarks']);
     }
 }

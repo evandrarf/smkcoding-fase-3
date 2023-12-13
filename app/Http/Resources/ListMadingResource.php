@@ -31,17 +31,25 @@ class ListMadingResource extends ResourceCollection
         $getFile = new GetFile();
         $date = Carbon::parse($data->published_at);
 
-        return [
+        $status = $data->status();
+
+        $res = [
             'id' => $data->id,
             'title' => $data->title,
             'thumbnail' => $getFile->handle($data->thumbnail)->full_path,
             'priority' => ucfirst($data->priority),
             'author' => $data->author->name,
             'slug' => $data->slug,
-            'status' => ucfirst($data->status()),
+            'status' => ucfirst($status),
             'published_at' => $date->format("j F Y"),
             'published_at_time' => $date->format("g:i A"),
         ];
+
+        if ($status == 'rejected') {
+            $res['rejection_reason'] = $data->rejectionReason->reason;
+        }
+
+        return $res;
     }
 
     private function transformCollection($collection)

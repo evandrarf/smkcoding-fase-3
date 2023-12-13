@@ -10,6 +10,7 @@ Route::controller(MadingController::class)->prefix('madings')->name('madings.')-
     Route::middleware('auth')->group(function () {
         Route::get('/create', 'create')->name('create')->middleware('roles:admin,management');
         Route::post('/create', 'store')->name('store')->middleware('roles:admin,management');
+        Route::post('/{id}/change-status', 'changeStatus')->name('change-status')->middleware('roles:admin');
     });
     Route::get('/{slug}', 'detail')->name('detail');
     Route::get('/{slug}/get-data', 'getDataDetail')->name('get-data-detail');

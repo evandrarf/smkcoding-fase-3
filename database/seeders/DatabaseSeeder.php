@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             RolePermission::class,
             UserSeeder::class,
             FileSeeder::class,
+            RejectionReason::class,
             MadingSeeder::class,
         ]);
     }

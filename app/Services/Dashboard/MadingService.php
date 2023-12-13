@@ -4,6 +4,7 @@ namespace App\Services\Dashboard;
 
 use App\Actions\Utility\PaginateCollection;
 use App\Models\Mading;
+use App\Models\RejectionReason;
 use App\Services\FileService;
 use Exception;
 use Illuminate\Support\Str;
@@ -60,6 +61,44 @@ class MadingService
         return $data;
     }
 
+    public function changeStatus($request, $id)
+    {
+        if (!auth()->check() || auth()->user()->role->name != 'admin') {
+            throw new Exception("You don't have permission to access this data", 403);
+        }
+
+        $data = Mading::find($id);
+
+        if (!$data) {
+            throw new Exception("Data not found", 404);
+        }
+
+        if ($request->status === "approve") {
+            $data->need_review = false;
+            $data->rejected = false;
+            $data->rejection_reason_id = null;
+        } else if ($request->status === "reject") {
+            $data->need_review = false;
+            $data->rejected = true;
+
+            $rejectionReason = RejectionReason::create([
+                'reason' => $request->rejection_reason,
+            ]);
+
+            $data->rejection_reason_id = $rejectionReason->id;
+        } else if ($request->status === "need review") {
+            $data->need_review = true;
+            $data->rejected = false;
+            $data->rejection_reason_id = null;
+        } else {
+            throw new Exception("Invalid request", 400);
+        }
+
+        $data->save();
+
+        return $data;
+    }
+
     public function store($request)
     {
         $fileService = new FileService();
@@ -74,7 +113,7 @@ class MadingService
             'thumbnail' => $file->id,
             'slug' => $slug,
             'priority' => $request->priority,
-            'published_at' => $request->published_at,
+            'published_at' => $request->published_at ? $request->published_at : now(),
         ]);
 
         return $data;

@@ -15,13 +15,13 @@ const badgeColor = {
 </script>
 
 <template>
-    <Link :href="route('app.madings.detail', data.slug)" class="h-full">
+    <Link :href="route('app.madings.detail', data.slug)" class="h-96">
         <div class="h-full flex flex-col gap-3 w-[250px]">
             <div class="h-2/3 overflow-hidden">
                 <img
                     :src="data.thumbnail"
                     alt="mading image"
-                    class="object-cover w-full h-full"
+                    class="object-contain w-full h-full"
                 />
             </div>
             <div class="h-1/3">
