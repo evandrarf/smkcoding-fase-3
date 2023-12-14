@@ -90,7 +90,7 @@ onMounted(() => {
             />
             <div class="absolute right-8 top-5">
                 <DropDownEditMenu
-                    class="relative inline-flex r-0"
+                    class="relative inline-flex border border-gray-200 r-0 rounded-full shadow-xl"
                     :align="'right'"
                     :last="index === data.length - 1 ? true : false"
                 >

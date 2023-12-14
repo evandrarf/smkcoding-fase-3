@@ -184,7 +184,7 @@ onMounted(() => {
                     </select>
                 </label>
             </div>
-            <div class="mt-6" v-if="form.status?.toLowerCase() !== 'published'">
+            <div class="mt-6">
                 <div class="flex">
                     <p class="text-gray-600 text-sm">
                         Want to schedule this mading?

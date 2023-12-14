@@ -127,11 +127,13 @@ class MadingService
             $data->thumbnail = $file->id;
         }
 
-        if ($data->status() == 'rejected') {
-            $data->rejected = false;
-            $data->rejection_reason_id = null;
-            $data->need_review = true;
-        }
+
+        $data->rejected = false;
+
+        RejectionReason::where('id', $data->rejection_reason_id)->delete();
+
+        $data->rejection_reason_id = null;
+        $data->need_review = true;
 
         $data->save();
 
