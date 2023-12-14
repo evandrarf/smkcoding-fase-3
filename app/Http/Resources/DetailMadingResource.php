@@ -30,13 +30,16 @@ class DetailMadingResource extends JsonResource
             'author' => $this->author->name,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'published_at' => $date->format("j F Y")
+            'published_at' => $date->format("j F Y"),
+            'user_id' => $this->user_id,
+            'slug' => $this->slug,
         ];
         $res['published_at_time'] = $date->format("g:i A");
 
         if (Auth::check() && (Auth::user()->id == $this->user_id || Auth::user()->role->name == 'admin')) {
             $res['status'] = ucfirst($this->status());
             $res['is_schedule'] = $this->published_at > now();
+            $res['published_at_datetime'] = $this->published_at->format("Y-m-d\TH:i");
         }
 
         return $res;

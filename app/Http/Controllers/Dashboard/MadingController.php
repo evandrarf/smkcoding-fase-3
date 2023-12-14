@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\ChangeMadingStatusRequest;
 use App\Http\Requests\Dashboard\CreateMadingRequest;
+use App\Http\Requests\Dashboard\UpdateMadingRequest;
 use App\Http\Resources\DetailMadingResource;
 use App\Http\Resources\ListMadingResource;
 use App\Http\Resources\SubmitMadingResource;
@@ -63,6 +64,26 @@ class MadingController extends Controller
             $data = $this->madingService->store($request);
 
             $res = new SubmitMadingResource($data, "Success create mading");
+
+            return $this->respond($res, 200);
+        } catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function edit($slug)
+    {
+        return Inertia::render('App/Mading/Edit', [
+            'slug' => $slug
+        ]);
+    }
+
+    public function update(UpdateMadingRequest $request, $slug)
+    {
+        try {
+            $data = $this->madingService->update($request, $slug);
+
+            $res = new SubmitMadingResource($data, "Success update mading");
 
             return $this->respond($res, 200);
         } catch (Exception $e) {

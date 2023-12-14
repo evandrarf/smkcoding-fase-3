@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stevebauman\Purify\Casts\PurifyHtmlOnGet;
 
 class Mading extends Model
 {
@@ -15,6 +16,7 @@ class Mading extends Model
         'published_at' => 'datetime',
         'need_review' => 'boolean',
         'rejected' => 'boolean',
+        'content' => PurifyHtmlOnGet::class,
     ];
 
     public function status()

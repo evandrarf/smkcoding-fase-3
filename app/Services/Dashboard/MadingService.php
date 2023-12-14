@@ -11,12 +11,13 @@ use Illuminate\Support\Str;
 
 class MadingService
 {
-    protected function checkSlug($originalSlug)
+    protected function checkSlug($originalSlug, $id = null)
     {
         $count = 1;
         $slug = $originalSlug;
 
-        while (Mading::query()->where('slug', $slug)->count() > 0) {
+
+        while (Mading::where('slug', $slug)->count() > 0 && Mading::where('slug', $slug)->first()->id != $id) {
             $slug = $originalSlug . '-' . $count;
             $count++;
         }
@@ -92,6 +93,44 @@ class MadingService
             $data->rejection_reason_id = null;
         } else {
             throw new Exception("Invalid request", 400);
+        }
+
+        $data->save();
+
+        return $data;
+    }
+
+    public function update($request, $slug)
+    {
+        $data = Mading::where('slug', $slug)->first();
+
+        if (!$data) {
+            throw new Exception("Data not found", 404);
+        }
+
+        if (auth()->user()->id != $data->user_id && auth()->user()->role->name != 'admin') {
+            throw new Exception("You don't have permission to access this data", 403);
+        }
+
+        $fileService = new FileService();
+
+        $slug = $this->checkSlug(Str::slug($request->title), $data->id);
+
+        $data->title = $request->title;
+        $data->content = $request->content;
+        $data->slug = $slug;
+        $data->priority = $request->priority;
+        $data->published_at = $request->published_at ? $request->published_at : now();
+
+        if ($request->hasFile('file')) {
+            $file = $fileService->uploadFile($request->file('file'));
+            $data->thumbnail = $file->id;
+        }
+
+        if ($data->status() == 'rejected') {
+            $data->rejected = false;
+            $data->rejection_reason_id = null;
+            $data->need_review = true;
         }
 
         $data->save();

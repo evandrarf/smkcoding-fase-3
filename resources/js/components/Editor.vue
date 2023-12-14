@@ -1,4 +1,5 @@
 <script setup>
+import { string } from "vue-types";
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import ImageUploader from "quill-image-uploader";
@@ -8,9 +9,11 @@ import { ref } from "vue";
 
 const emit = defineEmits(["update:content"]);
 const editor = ref(null);
+const props = defineProps({
+    content: string().def(""),
+});
 
 const handleChange = () => {
-    console.log(editor.value.getHTML());
     emit("update:content", editor.value.getHTML());
 };
 
@@ -18,7 +21,12 @@ const clearContent = () => {
     editor.value.setText("");
 };
 
+const setContent = () => {
+    editor.value.setHTML(props.content);
+};
+
 defineExpose({
+    // setContent,
     clearContent,
 });
 
@@ -55,6 +63,7 @@ const modules = {
 <template>
     <div>
         <QuillEditor
+            @ready="setContent"
             ref="editor"
             @update:content="handleChange"
             toolbar="full"

@@ -30,7 +30,7 @@ class SubmitMadingResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'data' => [],
+            'data' => $this->resource,
             'message' => $this->message,
         ];
     }
