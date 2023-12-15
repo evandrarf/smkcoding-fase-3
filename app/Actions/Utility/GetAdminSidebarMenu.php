@@ -14,6 +14,10 @@ class GetAdminSidebarMenu
             [
                 "name" => "Mading",
                 "url" => route("app.admin.madings.index"),
+            ],
+            [
+                "name" => "User",
+                "url" => route("app.admin.users.index"),
             ]
         ];
     }

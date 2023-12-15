@@ -28,12 +28,16 @@ const getUrlPathName = (route) => {
                     v-for="(menu, index) in admin_menus"
                     :key="index"
                     :href="menu.url"
-                    :class="
-                        $page.url.split('/').pop() ===
-                            getUrlPathName(menu.url).split('/').pop() &&
-                        'bg-gray-200'
-                    "
-                    class="text-blue-500 border-2 py-4 text-center px-3 border-gray-200 w-full"
+                    :class="[
+                        {
+                            'bg-gray-200':
+                                $page.url.split('/').pop() ===
+                                getUrlPathName(menu.url).split('/').pop(),
+                        },
+                        index === 0 && 'border-b-2',
+                        index === admin_menus.length - 1 && 'border-t-2',
+                    ]"
+                    class="text-blue-500 border-b border-t py-4 text-center px-3 border-gray-200 w-full"
                 >
                     {{ menu.name }}
                 </Link>
