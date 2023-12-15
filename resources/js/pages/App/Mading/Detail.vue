@@ -31,12 +31,66 @@ const data = ref({});
 const error = ref(null);
 const showDeleteModal = ref(false);
 const deleteLoading = ref(false);
+const is_saved = ref(false);
+
+const getIsSaved = () => {
+    axios
+        .get(
+            route("app.bookmarks.check-is-bookmarked", {
+                mading_id: data.value.id,
+            })
+        )
+        .then((res) => {
+            is_saved.value = res.data.data.is_bookmarked;
+        })
+        .catch((err) => {
+            console.log(err);
+            notify(
+                {
+                    group: "top",
+                    text: err.response.data.message,
+                    type: "error",
+                },
+                2500
+            );
+        });
+};
+
+const handleToogleBookmark = () => {
+    axios
+        .post(route("app.bookmarks.toggle-bookmark"), {
+            mading_id: data.value.id,
+        })
+        .then((res) => {
+            notify(
+                {
+                    group: "top",
+                    text: res.data.message,
+                    type: "success",
+                },
+                2500
+            );
+            getIsSaved();
+        })
+        .catch((err) => {
+            console.log(err);
+            notify(
+                {
+                    group: "top",
+                    text: err.response.data.message,
+                    type: "error",
+                },
+                2500
+            );
+        });
+};
 
 const getData = () => {
     axios
         .get(route("app.madings.get-data-detail", props.slug))
         .then((res) => {
             data.value = res.data;
+            getIsSaved();
         })
         .catch((err) => {
             notify(
@@ -120,15 +174,18 @@ onMounted(() => {
                             <span>Edit</span>
                         </Link>
                     </li>
-                    <li class="cursor-pointer hover:bg-slate-100">
+                    <li
+                        class="cursor-pointer hover:bg-slate-100"
+                        @click="handleToogleBookmark"
+                    >
                         <div
                             class="flex justify-center text-blue-500 items-center space-x-2 p-3"
                         >
                             <span>
-                                <Bookmark v-if="data.is_saved" />
+                                <Bookmark v-if="is_saved" />
                                 <BookmarkOutline v-else />
                             </span>
-                            <span v-if="data.is_saved">Saved</span>
+                            <span v-if="is_saved">Saved</span>
                             <span v-else>Save</span>
                         </div>
                     </li>

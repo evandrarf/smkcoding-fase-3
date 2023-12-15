@@ -38,6 +38,7 @@ Route::name('app.')->group(function () {
     require __DIR__ . '/app/mading.php';
     require __DIR__ . '/app/admin.php';
     require __DIR__ . '/app/profile.php';
+    require __DIR__ . '/app/bookmark.php';
 });
 
 Route::middleware('auth')->group(function () {

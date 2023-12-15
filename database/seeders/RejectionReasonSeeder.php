@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Mading;
-use App\Models\RejectionReason as ModelsRejectionReason;
+use App\Models\RejectionReason;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RejectionReason extends Seeder
+class RejectionReasonSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,7 +23,7 @@ class RejectionReason extends Seeder
         $rejectMadings = Mading::where('rejected', true)->pluck('id')->toArray();
 
         foreach ($rejectMadings as $id) {
-            ModelsRejectionReason::create([
+            RejectionReason::create([
                 'mading_id' => $id,
                 'reason' => $reasons[array_rand($reasons)],
             ]);

@@ -27,7 +27,7 @@ class GetNavbarMenu
             ],
             [
                 "name" => "Bookmarks",
-                "url" => "https://localhost:8000/bookmarks",
+                "url" => route('app.bookmarks.index'),
                 "icon" => "Bookmark",
                 "can" => ["view_bookmarks"]
             ],
