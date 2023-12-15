@@ -13,6 +13,8 @@ Route::controller(MadingController::class)->prefix('madings')->name('madings.')-
         Route::get('/{slug}/edit', 'edit')->name('edit')->middleware('roles:admin,management');
         Route::post('/{slug}/update', 'update')->name('update')->middleware('roles:admin,management');
         Route::post('/{id}/change-status', 'changeStatus')->name('change-status')->middleware('roles:admin');
+        Route::get('/me', 'myMading')->name('my-mading')->middleware('roles:admin,management');
+        Route::delete('/{id}/delete', 'delete')->name('delete')->middleware('roles:admin,management');
     });
     Route::get('/{slug}', 'detail')->name('detail');
     Route::get('/{slug}/get-data', 'getDataDetail')->name('get-data-detail');

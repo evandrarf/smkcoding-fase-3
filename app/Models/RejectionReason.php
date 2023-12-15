@@ -10,4 +10,9 @@ class RejectionReason extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function mading()
+    {
+        return $this->belongsTo(Mading::class);
+    }
 }

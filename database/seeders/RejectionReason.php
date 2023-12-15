@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Mading;
 use App\Models\RejectionReason as ModelsRejectionReason;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,8 +20,13 @@ class RejectionReason extends Seeder
             'Konten tidak sesuai dengan kaidah penulisan',
         ];
 
-        foreach ($reasons as $reason) {
-            ModelsRejectionReason::create(compact('reason'));
+        $rejectMadings = Mading::where('rejected', true)->pluck('id')->toArray();
+
+        foreach ($rejectMadings as $id) {
+            ModelsRejectionReason::create([
+                'mading_id' => $id,
+                'reason' => $reasons[array_rand($reasons)],
+            ]);
         }
     }
 }

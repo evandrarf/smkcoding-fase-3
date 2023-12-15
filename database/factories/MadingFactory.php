@@ -28,7 +28,6 @@ class MadingFactory extends Factory
             'priority' => $this->faker->randomElement(['important', 'normal']),
             'need_review' => $need_review,
             'rejected' => $rejected,
-            'rejection_reason_id' => $rejected ? $this->faker->numberBetween(1, 3) : null,
             'published_at' => $publishedAt,
         ];
     }

@@ -27,7 +27,7 @@ class MadingService
 
     public function getData($request)
     {
-        $query = Mading::query();
+        $query = Mading::query()->with(['author', 'thumbnail', 'rejectionReason']);
 
         $query->when($request->has('priority') && $request->priority != null, function ($q) use ($request) {
             $q->where('priority', $request->priority);
@@ -77,20 +77,22 @@ class MadingService
         if ($request->status === "approve") {
             $data->need_review = false;
             $data->rejected = false;
-            $data->rejection_reason_id = null;
+            if ($data->rejectionReason) {
+                $data->rejectionReason()->delete();
+            }
+            $data->rejectionReason()->delete();
         } else if ($request->status === "reject") {
             $data->need_review = false;
             $data->rejected = true;
 
-            $rejectionReason = RejectionReason::create([
+            RejectionReason::create([
                 'reason' => $request->rejection_reason,
+                'mading_id' => $data->id,
             ]);
-
-            $data->rejection_reason_id = $rejectionReason->id;
         } else if ($request->status === "need review") {
             $data->need_review = true;
             $data->rejected = false;
-            $data->rejection_reason_id = null;
+            $data->rejectionReason()->delete();
         } else {
             throw new Exception("Invalid request", 400);
         }
@@ -108,7 +110,7 @@ class MadingService
             throw new Exception("Data not found", 404);
         }
 
-        if (auth()->user()->id != $data->user_id && auth()->user()->role->name != 'admin') {
+        if (auth()->user()->id !== $data->user_id) {
             throw new Exception("You don't have permission to access this data", 403);
         }
 
@@ -127,13 +129,10 @@ class MadingService
             $data->thumbnail = $file->id;
         }
 
-
+        $data->need_review = true;
         $data->rejected = false;
 
-        RejectionReason::where('id', $data->rejection_reason_id)->delete();
-
-        $data->rejection_reason_id = null;
-        $data->need_review = true;
+        $data->rejectionReason()->delete();
 
         $data->save();
 
@@ -177,5 +176,58 @@ class MadingService
         }
 
         return $data;
+    }
+
+    public function myMading($request)
+    {
+        if (!auth()->check()) {
+            throw new Exception("You don't have permission to access this data", 403);
+        }
+
+        $query = Mading::query()->where('user_id', auth()->user()->id)->with(['thumbnail', 'author', 'rejectionReason']);
+
+        $query->when($request->has('priority') && $request->priority != null, function ($q) use ($request) {
+            $q->where('priority', $request->priority);
+        });
+
+        $query->when($request->has('search') && $request->search != null, function ($q) use ($request) {
+            $q->where('title', 'like', '%' . $request->search . '%');
+        });
+
+        $query->when($request->has('status') && $request->status != null, function ($q) use ($request) {
+            if ($request->status == 'published') {
+                $q->where('published_at', '<=', now())->where('rejected', false)->where('need_review', false);
+            } else if ($request->status == 'rejected') {
+                $q->where('rejected', true);
+            } else if ($request->status == 'need_review') {
+                $q->where('need_review', true);
+            } else if ($request->status == 'draft') {
+                $q->where('published_at', '>', now())->where('rejected', false)->where('need_review', false);
+            }
+        });
+
+
+        $limit = $request->limit > 0 || $request->limit !== null ? $request->limit : 10;
+
+        $paginate = new PaginateCollection();
+
+        $data = $paginate->handle($query->orderBy('published_at', 'desc')->get(), $limit);
+
+        return $data;
+    }
+
+    public function delete($id)
+    {
+        $data = Mading::find($id);
+
+        if (!$data) {
+            throw new Exception("Data not found", 404);
+        }
+
+        if (auth()->user()->id !== $data->user_id && auth()->user()->role->name != 'admin') {
+            throw new Exception("You don't have permission to access this data", 403);
+        }
+
+        $data->delete();
     }
 }

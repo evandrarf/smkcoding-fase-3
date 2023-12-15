@@ -78,10 +78,10 @@ class MadingController extends Controller
         ]);
     }
 
-    public function update(UpdateMadingRequest $request, $slug)
+    public function update(UpdateMadingRequest $request, $id)
     {
         try {
-            $data = $this->madingService->update($request, $slug);
+            $data = $this->madingService->update($request, $id);
 
             $res = new SubmitMadingResource($data, "Success update mading");
 
@@ -104,6 +104,32 @@ class MadingController extends Controller
             $data = $this->madingService->getDataDetail($slug);
 
             $res = new DetailMadingResource($data);
+
+            return $this->respond($res, 200);
+        } catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function myMading(Request $request)
+    {
+        try {
+            $data = $this->madingService->myMading($request);
+
+            $res = new ListMadingResource($data);
+
+            return $this->respond($res, 200);
+        } catch (Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $this->madingService->delete($id);
+
+            $res = new SubmitMadingResource(null, "Success delete mading");
 
             return $this->respond($res, 200);
         } catch (Exception $e) {

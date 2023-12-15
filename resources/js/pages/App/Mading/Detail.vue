@@ -9,34 +9,28 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { notify } from "notiwind";
 import { Head, Link } from "@inertiajs/inertia-vue3";
+import { Inertia } from "@inertiajs/inertia";
 
 import AppLayout from "@/layouts/AppLayout.vue";
 import Spinner from "@/components/icons/Spinner.vue";
 import DropDownEditMenu from "@/components/DropDownEditMenu.vue";
 import Edit from "@/components/icons/Edit.vue";
 import Bookmark from "@/components/icons/Bookmark.vue";
+import DeleteModal from "@/components/DeleteModal.vue";
+import Trash from "@/components/icons/Trash.vue";
 import BookmarkOutline from "@/components/icons/BookmarkOutline.vue";
 
 const props = defineProps({
     slug: string(),
     user: object().def({}),
+    role: string(),
 });
 
 const isLoading = ref(false);
 const data = ref({});
 const error = ref(null);
-
-const badgeColor = {
-    normal: "blue",
-    important: "red",
-};
-
-const statusColor = {
-    published: "green",
-    draft: "yellow",
-    rejected: "red",
-    "need review": "yellow",
-};
+const showDeleteModal = ref(false);
+const deleteLoading = ref(false);
 
 const getData = () => {
     axios
@@ -59,6 +53,38 @@ const getData = () => {
         .finally(() => (isLoading.value = false));
 };
 
+const handleDelete = () => {
+    deleteLoading.value = true;
+    axios
+        .delete(route("app.madings.delete", data.value.id))
+        .then((res) => {
+            notify(
+                {
+                    group: "top",
+                    text: res.data.message,
+                    type: "success",
+                },
+                2500
+            );
+            Inertia.visit(route("app.madings.index"));
+        })
+        .catch((err) => {
+            console.log(err);
+            notify(
+                {
+                    group: "top",
+                    text: err.response.data.message,
+                    type: "error",
+                },
+                2500
+            );
+        })
+        .finally(() => {
+            deleteLoading.value = false;
+            showDeleteModal.value = false;
+        });
+};
+
 onMounted(() => {
     isLoading.value = true;
     getData();
@@ -70,18 +96,6 @@ onMounted(() => {
         v-if="!isLoading && error === null"
         class="w-full flex flex-col gap-20"
     >
-        <!-- <div class="mt-8 flex justify-between items-center">
-            <h1 class="text-3xl font-semibold">{{ data.title }}</h1>
-            <div>
-                <Link
-                    v-if="user.id === data.user_id"
-                    :href="route('app.madings.edit', data.slug)"
-                    class="text-blue-500 flex items-center gap-2"
-                >
-                    <Edit /> <span>Edit</span>
-                </Link>
-            </div>
-        </div> -->
         <div class="w-full h-[500px] overflow-hidden relative">
             <img
                 :src="data.thumbnail"
@@ -116,6 +130,20 @@ onMounted(() => {
                             </span>
                             <span v-if="data.is_saved">Saved</span>
                             <span v-else>Save</span>
+                        </div>
+                    </li>
+                    <li
+                        class="cursor-pointer hover:bg-slate-100"
+                        v-if="user.id === data.user_id || role === 'admin'"
+                        @click="() => (showDeleteModal = true)"
+                    >
+                        <div
+                            class="flex justify-center text-red-500 items-center space-x-2 p-3"
+                        >
+                            <span>
+                                <Trash />
+                            </span>
+                            <span>Delete</span>
                         </div>
                     </li>
                 </DropDownEditMenu>
@@ -176,4 +204,10 @@ onMounted(() => {
     <div v-else class="w-full h-screen flex justify-center items-center">
         <Spinner class="w-12 h-12" />
     </div>
+    <DeleteModal
+        @close="() => (showDeleteModal = false)"
+        @submit="handleDelete"
+        :showModal="showDeleteModal"
+        :isLoading="deleteLoading"
+    />
 </template>

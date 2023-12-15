@@ -17,7 +17,6 @@ import Pagination from "@/components/AdminPagination.vue";
 import DropDownEditMenu from "@/components/DropDownEditMenu.vue";
 import FilterData from "@/components/FilterData.vue";
 import debounce from "@/composable/debounce";
-import RejectModal from "./RejectModal.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 
 const heads = ref(["No", "Title", "Author", "Published At", "Action"]);
@@ -33,16 +32,13 @@ const pagination = ref({
 });
 const statusFilter = ref("published");
 const search = ref("");
-const rejectionReason = ref("");
-const showRejectModal = ref(false);
-const selectedItem = ref({});
-const rejectLoading = ref(false);
 const showDeleteModal = ref(false);
 const deleteLoading = ref(false);
+const selectedItem = ref({});
 
 const getData = debounce(async (page = 1) => {
     axios
-        .get(route("app.madings.get-data"), {
+        .get(route("app.madings.my-mading"), {
             params: {
                 limit: 10,
                 page: page,
@@ -107,48 +103,6 @@ const handleChangeStatus = ({ target }) => {
     getData();
 };
 
-const handlePostChangeStatus = (status, item) => {
-    rejectLoading.value = true;
-    axios
-        .post(route("app.madings.change-status", item.id), {
-            status: status,
-            rejection_reason: rejectionReason.value,
-        })
-        .then((response) => {
-            notify(
-                {
-                    group: "top",
-                    text: response.data.message,
-                    type: "success",
-                },
-                2500
-            );
-            rejectionReason.value = "";
-            showRejectModal.value = false;
-            selectedItem.value = {};
-            isLoading.value = true;
-            getData();
-        })
-        .catch((error) => {
-            console.log(error);
-            notify(
-                {
-                    group: "top",
-                    text: error.response.data.message,
-                    type: "error",
-                },
-                2500
-            );
-        })
-        .finally(() => {
-            rejectLoading.value = false;
-        });
-};
-
-const handleChangeRejectionReason = (value) => {
-    rejectionReason.value = value;
-};
-
 const handleAlertDelete = (item) => {
     showDeleteModal.value = true;
     selectedItem.value = item;
@@ -157,26 +111,25 @@ const handleAlertDelete = (item) => {
 const handleDelete = () => {
     deleteLoading.value = true;
     axios
-        .delete(route("app.madings.delete", selectedItem.value.id))
-        .then((response) => {
+        .delete(route("app.madings.delete", selectedItem.value))
+        .then((res) => {
             notify(
                 {
                     group: "top",
-                    text: response.data.message,
+                    text: res.data.message,
                     type: "success",
                 },
                 2500
             );
-            showDeleteModal.value = false;
             isLoading.value = true;
             getData();
         })
-        .catch((error) => {
-            console.log(error);
+        .catch((err) => {
+            console.log(err);
             notify(
                 {
                     group: "top",
-                    text: error.response.data.message,
+                    text: err.response.data.message,
                     type: "error",
                 },
                 2500
@@ -184,12 +137,8 @@ const handleDelete = () => {
         })
         .finally(() => {
             deleteLoading.value = false;
+            showDeleteModal.value = false;
         });
-};
-
-const handleReject = (item) => {
-    showRejectModal.value = true;
-    selectedItem.value = item;
 };
 
 onMounted(() => {
@@ -200,7 +149,7 @@ onMounted(() => {
 <template>
     <Head title="Admin Mading | STEMBA MADING" />
     <div class="mb-6 flex justify-between">
-        <h1 class="text-2xl font-medium">Mading</h1>
+        <h1 class="text-2xl font-medium">My Mading</h1>
         <div class="flex flex-col gap-3">
             <nav class="grid grid-cols-4 text-center items-center text-sm">
                 <div
@@ -266,31 +215,25 @@ onMounted(() => {
                             <span>Detail</span>
                         </div>
                     </li>
+
                     <li
-                        v-if="statusFilter === 'need_review'"
                         class="cursor-pointer hover:bg-slate-100"
-                        @click="() => handlePostChangeStatus('approve', item)"
+                        @click="
+                            () =>
+                                Inertia.visit(
+                                    route('app.madings.edit', item.slug)
+                                )
+                        "
                     >
                         <div
-                            class="flex text-green-500 items-center space-x-2 p-3"
+                            class="flex text-yellow-500 items-center space-x-2 p-3"
                         >
-                            <span>Approve</span>
-                        </div>
-                    </li>
-                    <li
-                        v-if="statusFilter === 'need_review'"
-                        class="cursor-pointer hover:bg-slate-100"
-                        @click="() => handleReject(item)"
-                    >
-                        <div
-                            class="flex text-red-500 items-center space-x-2 p-3"
-                        >
-                            <span>Reject</span>
+                            <span>Edit</span>
                         </div>
                     </li>
                     <li
                         class="cursor-pointer hover:bg-slate-100"
-                        @click="() => handleAlertDelete(item)"
+                        @click="() => handleAlertDelete(item.id)"
                     >
                         <div
                             class="flex justify-between text-red-500 items-center space-x-2 p-3"
@@ -309,14 +252,6 @@ onMounted(() => {
             @previous="previousPaginate"
         />
     </div>
-    <RejectModal
-        :isLoading="rejectLoading"
-        @close="() => (showRejectModal = false)"
-        @submit="() => handlePostChangeStatus('reject', selectedItem)"
-        @update:modelValue="handleChangeRejectionReason"
-        :modelValue="rejectionReason"
-        :showModal="showRejectModal"
-    />
     <DeleteModal
         @close="() => (showDeleteModal = false)"
         @submit="handleDelete"

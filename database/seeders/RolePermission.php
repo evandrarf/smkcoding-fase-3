@@ -43,9 +43,9 @@ class RolePermission extends Seeder
         $roleAdmin->givePermissionsTo($allPermissions);
 
         $roleManagement = Role::where('name', 'management')->first();
-        $roleManagement->givePermissionsTo(['create_mading', 'view_bookmarks', 'view_mading', 'view_user_page']);
+        $roleManagement->givePermissionsTo(['create_mading', 'view_bookmarks', 'view_mading', 'view_profile_page']);
 
         $roleUser = Role::where('name', 'user')->first();
-        $roleUser->givePermissionsTo(['view_mading', 'view_user_page', 'view_bookmarks']);
+        $roleUser->givePermissionsTo(['view_mading', 'view_profile_page', 'view_bookmarks']);
     }
 }

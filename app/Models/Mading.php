@@ -34,11 +34,16 @@ class Mading extends Model
 
     public function rejectionReason()
     {
-        return $this->belongsTo(RejectionReason::class);
+        return $this->hasOne(RejectionReason::class);
     }
 
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function thumbnail()
+    {
+        return $this->belongsTo(File::class, 'thumbnail_id');
     }
 }

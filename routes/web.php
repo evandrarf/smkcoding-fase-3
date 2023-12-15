@@ -30,13 +30,14 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::post('/', [RegisterController::class, 'register'])->name('submit');
     });
 
-    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 });
 
 Route::name('app.')->group(function () {
     require __DIR__ . '/app/home.php';
     require __DIR__ . '/app/mading.php';
     require __DIR__ . '/app/admin.php';
+    require __DIR__ . '/app/profile.php';
 });
 
 Route::middleware('auth')->group(function () {

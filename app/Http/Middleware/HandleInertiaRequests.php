@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
             "user" => fn () => $request->user()
                 ? $request->user()->only("id", "name", "email")
                 : null,
+            'role' => fn () => $request->user()?->role->name,
             "menus" => $activeMenu,
             "admin_menus" => $request->user()?->hasRole("admin") ? $adminMenus : [],
         ]);

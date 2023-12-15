@@ -39,7 +39,7 @@ class GetNavbarMenu
             ],
             [
                 "name" => "Profile",
-                "url" => "https://localhost:8000/profile",
+                "url" => route('app.profile.index'),
                 "icon" => "User",
                 "can" => ['view_profile_page']
             ],

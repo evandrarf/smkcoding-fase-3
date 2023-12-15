@@ -51,7 +51,7 @@ const getMading = debounce(async (page = 1) => {
             notify(
                 {
                     group: "top",
-                    text: err.response.data.message,
+                    text: error.response.data.message,
                     type: "error",
                 },
                 2500

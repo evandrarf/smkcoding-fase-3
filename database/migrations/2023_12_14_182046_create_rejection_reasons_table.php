@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('rejection_reasons', function (Blueprint $table) {
             $table->id();
             $table->text('reason');
+            $table->foreignId('mading_id')->constrained('madings')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
