@@ -1,0 +1,11 @@
+ADMIN:
+email = admin@gmail.com
+password = 12345678
+
+Management
+email = management@gmail.com
+password = 12345678
+
+User
+email = user@gmail.com
+password = 12345678
