@@ -18,6 +18,10 @@ class GetAdminSidebarMenu
             [
                 "name" => "User",
                 "url" => route("app.admin.users.index"),
+            ],
+            [
+                "name" => "Analytic",
+                "url" => route("app.admin.analytics.index"),
             ]
         ];
     }

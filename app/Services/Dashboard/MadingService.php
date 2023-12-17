@@ -129,7 +129,12 @@ class MadingService
             $data->thumbnail = $file->id;
         }
 
-        $data->need_review = true;
+        $data->need_review = false;
+
+        if ($data->rejected) {
+            $data->need_review = true;
+        }
+
         $data->rejected = false;
 
         $data->rejectionReason()->delete();

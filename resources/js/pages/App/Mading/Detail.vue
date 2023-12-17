@@ -90,9 +90,11 @@ const getData = () => {
         .get(route("app.madings.get-data-detail", props.slug))
         .then((res) => {
             data.value = res.data;
-            getIsSaved();
+
+            if (props.user) getIsSaved();
         })
         .catch((err) => {
+            console.log(err);
             notify(
                 {
                     group: "top",
@@ -164,7 +166,7 @@ onMounted(() => {
                 >
                     <li class="cursor-pointer hover:bg-slate-100">
                         <Link
-                            v-if="user.id === data.user_id"
+                            v-if="user && user?.id === data.user_id"
                             :href="route('app.madings.edit', data.slug)"
                             class="text-blue-500 flex justify-center items-center space-x-2 p-3"
                         >
@@ -191,7 +193,10 @@ onMounted(() => {
                     </li>
                     <li
                         class="cursor-pointer hover:bg-slate-100"
-                        v-if="user.id === data.user_id || role === 'admin'"
+                        v-if="
+                            (user && user?.id === data.user_id) ||
+                            role === 'admin'
+                        "
                         @click="() => (showDeleteModal = true)"
                     >
                         <div

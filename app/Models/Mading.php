@@ -46,4 +46,9 @@ class Mading extends Model
     {
         return $this->belongsTo(File::class, 'thumbnail_id');
     }
+
+    public function visitors()
+    {
+        return $this->hasMany(MadingVisit::class);
+    }
 }

@@ -16,6 +16,6 @@ Route::controller(MadingController::class)->prefix('madings')->name('madings.')-
         Route::get('/me', 'myMading')->name('my-mading')->middleware('roles:admin,management');
         Route::delete('/{id}/delete', 'delete')->name('delete')->middleware('roles:admin,management');
     });
-    Route::get('/{slug}', 'detail')->name('detail');
+    Route::get('/{slug}', 'detail')->name('detail')->middleware('mading_visits_counter');
     Route::get('/{slug}/get-data', 'getDataDetail')->name('get-data-detail');
 });

@@ -17,6 +17,9 @@ library.add(far);
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
 
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
 createInertiaApp({
     resolve: async (name) => {
         const pages = import.meta.glob("./pages/**/*.vue");
@@ -30,6 +33,7 @@ createInertiaApp({
             .component("Link", Link)
             .component("Head", Head)
             .component("font-awesome-icon", FontAwesomeIcon)
+            .component("VueDatePicker", VueDatePicker)
             .mount(el);
     },
 });
