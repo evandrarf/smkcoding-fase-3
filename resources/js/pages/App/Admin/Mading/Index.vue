@@ -198,7 +198,7 @@ onMounted(() => {
 });
 </script>
 <template>
-    <Head title="Admin Mading | STEMBA MADING" />
+    <Head title="Mading Management | Admin Stemba Mading" />
     <div class="mb-6 flex justify-between">
         <h1 class="text-2xl font-medium">Mading</h1>
         <div class="flex flex-col gap-3">

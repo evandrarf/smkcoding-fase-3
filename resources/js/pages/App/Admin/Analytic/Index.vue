@@ -18,6 +18,7 @@ import {
     endOfWeek,
 } from "date-fns";
 import dayjs from "dayjs";
+import { Head } from "@inertiajs/inertia-vue3";
 
 import PieChart from "./PieChart.vue";
 import Spinner from "@/components/icons/Spinner.vue";
@@ -208,6 +209,7 @@ onMounted(() => {
 });
 </script>
 <template>
+    <Head title="Analytics | Admin Stemba Mading" />
     <h1 class="text-2xl font-semibold">Analytics Visitor of Mading</h1>
     <div class="my-8">
         <div class="flex justify-between items-center mb-4">
