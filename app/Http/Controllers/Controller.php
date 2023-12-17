@@ -14,4 +14,11 @@ class Controller extends BaseController
     {
         return response()->json($data, $status);
     }
+
+    public function exceptionError($exception, $status = 500)
+    {
+        return response()->json([
+            'message' => is_array($exception) ? $exception : $exception
+        ], $status);
+    }
 }

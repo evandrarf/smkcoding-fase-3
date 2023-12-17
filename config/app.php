@@ -59,6 +59,9 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'file_upload_endpoint' => env('FILE_UPLOAD_ENDPOINT', 'http://localhost'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -70,7 +73,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,6 +171,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -183,6 +187,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];
