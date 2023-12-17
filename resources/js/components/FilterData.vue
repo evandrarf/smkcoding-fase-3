@@ -36,9 +36,9 @@ onUnmounted(() => {
             @input="$emit('search', $event.target.value)"
             type="search"
             placeholder="Search ..."
-            class="border w-3/4 rounded border-slate-200 outline-none text-sm px-3 py-1"
+            class="border w-full rounded border-slate-200 outline-none text-sm px-3 py-1"
         />
-        <button
+        <!-- <button
             ref="trigger"
             class="mr-5 border rounded border-slate-200 h-8 w-8"
             @click.prevent="dropdownOpen = !dropdownOpen"
@@ -65,6 +65,6 @@ onUnmounted(() => {
             >
                 <slot />
             </div>
-        </transition>
+        </transition> -->
     </div>
 </template>

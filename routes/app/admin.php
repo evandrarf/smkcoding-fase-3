@@ -27,5 +27,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/get-data', 'getData')->name('get-data');
         Route::get('/get-mading-visitor-chart', 'getMadingVisitorChart')->name('get-mading-visitor-chart');
+        Route::get('/download-mading-visitor', 'download')->name('download-mading-visitor');
     });
 })->middleware(['auth', 'role:admin']);

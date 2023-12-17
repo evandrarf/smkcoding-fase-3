@@ -3,6 +3,7 @@
 namespace App\Services\Dashboard;
 
 use App\Actions\Utility\PaginateCollection;
+use App\Exports\MadingVisitorExport;
 use App\Models\Mading;
 use App\Models\MadingVisit;
 use Carbon\Carbon;
@@ -65,13 +66,26 @@ class AnalyticService
 
         $query = Mading::query()->whereHas('visitors', function ($q) use ($start_date_format, $end_date_format) {
             $q->whereDate('created_at', '>=', $start_date_format)->whereDate('created_at', '<=', $end_date_format);
-        })->with('visitors')->withCount(['visitors', 'author']);
+        })->with(['visitors', 'author'])->withCount(['visitors']);
 
         $paginateCollection = new PaginateCollection();
 
         $limit = $request->has('limit') && $request->limit != null ? $request->limit : 10;
 
         $data = $paginateCollection->handle($query->orderBy('visitors_count', 'desc')->get(), $limit);
+
+        return $data;
+    }
+
+    public function getDataExport($request)
+    {
+        $start_date = $request->has('start_date') && $request->start_date != null ? $request->start_date : Carbon::now();
+        $end_date = $request->has('end_date') && $request->end_date != null ? $request->end_date : $request->start_date;
+
+        $start_date_format = Carbon::parse($start_date)->format('Y-m-d');
+        $end_date_format = Carbon::parse($end_date)->format('Y-m-d');
+
+        $data = new MadingVisitorExport($start_date_format, $end_date_format);
 
         return $data;
     }

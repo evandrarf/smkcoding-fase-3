@@ -29,6 +29,7 @@ const dataChart = ref({});
 const isLoading = ref(true);
 const date = ref([dayjs().toISOString(), dayjs().toISOString()]);
 const isEmpty = ref(false);
+const isLoadingDownload = ref(false);
 const pagination = ref({
     count: "",
     current_page: "",
@@ -161,6 +162,40 @@ const getData = debounce(async (page = 1) => {
         });
 }, 250);
 
+const exportData = () => {
+    isLoadingDownload.value = true;
+    axios
+        .get(route("app.admin.analytics.download-mading-visitor"), {
+            responseType: "blob",
+            params: {
+                start_date: date.value[0],
+                end_date: date.value[1],
+            },
+        })
+        .then((res) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "mading-visitor.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        })
+        .catch((res) => {
+            notify(
+                {
+                    type: "error",
+                    group: "top",
+                    text: res.response.data.message,
+                },
+                2500
+            );
+        })
+        .finally(() => {
+            isLoadingDownload.value = false;
+        });
+};
+
 watch(date, (newVal) => {
     isLoading.value = true;
     getDataChart();
@@ -176,6 +211,19 @@ onMounted(() => {
     <h1 class="text-2xl font-semibold">Analytics Visitor of Mading</h1>
     <div class="my-8">
         <div class="flex justify-between items-center mb-4">
+            <div>
+                <button
+                    @click="exportData"
+                    :disabled="isLoadingDownload"
+                    :class="{
+                        'bg-blue-600 cursor-pointer': !isLoadingDownload,
+                        'bg-gray-400 cursor-not-allowed': isLoadingDownload,
+                    }"
+                    class="text-sm text-white rounded px-3 py-2"
+                >
+                    Download
+                </button>
+            </div>
             <div class="w-1/3">
                 <VueDatePicker
                     v-model="date"

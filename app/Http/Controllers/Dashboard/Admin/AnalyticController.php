@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard\Admin;
 
+use App\Exports\MadingVisitorExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ListMadingResource;
 use App\Http\Resources\ListMadingVisitorResurce;
@@ -42,6 +43,17 @@ class AnalyticController extends Controller
             $res = new ListMadingVisitorResurce($data);
 
             return $this->respond($res);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function download(Request $request)
+    {
+        try {
+            $data = $this->analyticService->getDataExport($request);
+
+            return $data->download('mading-visitor.xlsx');
         } catch (\Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
